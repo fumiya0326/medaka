@@ -1,23 +1,19 @@
 import RPi.GPIO as GPIO
-import dht11
+from DHT11_Python import dht11
 import time
 import datetime
 
-GPIO.setwarnings(True)
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
+GPIO.cleanup()
 
-def main(): 
-    instance = dht11.DHT11(pin=14)
-    while True: 
-        result = instance.read()
-        if result.is_valid():
-            print(result.temperature, result.humidity)
-        time.sleep(1)
+module = dht11.DHT11(pin=27)
 
-if __name__ == "__main__":
-    try:
-        GPIO.setwarnings(True)
-        GPIO.setmode(GPIO.BCM)
-        main()
-    except KeyboardInterrupt:
-        GPIO.cleanup()
+while True:
+    result = module.read()
+    if result.is_valid():
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        print("気温: " + str(result.temperature) + "℃")
+        print("湿度: " + str(result.humidity) + "%")
+        break
+    time.sleep(7)
